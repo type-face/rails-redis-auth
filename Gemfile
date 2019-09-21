@@ -26,6 +26,9 @@ group :development do
 end
 
 group :test do
+  gem 'guard'
+  gem 'guard-bundler'
+  gem 'guard-rspec'
   gem 'mock_redis'
   gem 'rspec-rails'
 end
