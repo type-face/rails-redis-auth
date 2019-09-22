@@ -3,20 +3,24 @@
 # User accounts
 class User
   include ActiveModel::Validations
+  include ActiveModel::SecurePassword
   include Redis::Objects
   @@usernames = Redis::Set.new('users')
 
-  attr_accessor :username, :password
-  validates :username, :password, presence: true
+  has_secure_password
+  attr_accessor :username, :password_digest
+  validates :username, presence: true
+  validates :password, length: { minimum: 10 }
 
   def initialize(username:, password:)
-    @username = username
-    @password = password
+    @username = username.downcase
+    self.password = password
   end
 
   def save
-    @@usernames << @username
-    Redis::Value.new(User.password_redis_key(@username)).value = @password
+    @@usernames << @username.downcase
+    Redis::Value.new(User.password_redis_key(@username)).value =
+      password_digest
     true
   end
 
@@ -26,7 +30,7 @@ class User
     end
 
     def find(username)
-      return false unless usernames.member? username
+      return false unless usernames.member? username.downcase
 
       password = password_lookup(username)
       new(username: username, password: password)
