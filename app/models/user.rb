@@ -6,7 +6,7 @@ class User
   include ActiveModel::SecurePassword
   include Redis::Objects
 
-  @@usernames = Redis::Set.new('users')
+  @usernames = Redis::Set.new('users')
 
   has_secure_password
 
@@ -29,14 +29,14 @@ class User
     return unless valid?
 
     # TODO: run as transaction
-    @@usernames << @username.downcase
+    self.class.usernames << @username.downcase
     Redis::Value.new(password_redis_key).value =
       password_digest
     true
   end
 
   def unique_username?
-    errors.add(:username, 'must be unique') if @@usernames.member? username
+    errors.add(:username, 'must be unique') if self.class.usernames.member? username
   end
 
   def password_digest
@@ -48,9 +48,7 @@ class User
   end
 
   class << self
-    def usernames
-      @@usernames
-    end
+    attr_reader :usernames
 
     def find(username)
       return unless usernames.member? username.downcase

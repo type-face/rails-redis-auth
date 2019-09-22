@@ -1,0 +1,42 @@
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'cache/**/*'
+    - 'vendor/**/*'
+  DisplayCopNames: true
+  CacheRootDirectory:
+    - 'tmp/'
+
+Rails:
+  Enabled: true
+
+Rails/InverseOf:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/RedundantSelf:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/ExampleLength:
+  Max: 120
+  
+RSpec/MultipleExpectations:
+  Max: 3
+
+RSpec/Focus:
+  Enabled: true
+
+RSpec/NestedGroups:
+  Max: 4
+
+RSpec/ImplicitSubject:
+  Enabled: false

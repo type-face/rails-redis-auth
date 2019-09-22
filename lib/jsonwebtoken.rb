@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'jwt'
 
 # https://www.sitepoint.com/authenticate-your-rails-api-with-jwt-from-scratch/
@@ -12,10 +14,11 @@ class JsonWebToken
   end
 
   def self.valid_payload(payload)
-    if expired(payload) || payload['iss'] != meta[:iss] || payload['aud'] != meta[:aud]
-      return false
+    if expired(payload) || payload['iss'] != meta[:iss] ||
+       payload['aud'] != meta[:aud]
+      false
     else
-      return true
+      true
     end
   end
 
@@ -24,12 +27,12 @@ class JsonWebToken
     {
       exp: 7.days.from_now.to_i,
       iss: 'lendesk',
-      aud: 'lendesk',
+      aud: 'lendesk'
     }
   end
 
   # Validates if the token is expired by exp parameter
   def self.expired(payload)
-    Time.at(payload['exp']) < Time.now
+    Time.at.utc(payload['exp']) < Time.now.utc
   end
 end
