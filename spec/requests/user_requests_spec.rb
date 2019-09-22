@@ -35,6 +35,10 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'login' do
+    let(:invalid_params) do
+      { username: 'test@example.com', password: 'incorrect' }
+    end
+
     it 'returns auth token if creds are valid' do
       post '/users', params: valid_params
       post '/login', params: valid_params
@@ -48,11 +52,16 @@ RSpec.describe 'Users', type: :request do
     end
 
     it 'returns 401 if invalid creds sent' do
-      invalid_params =
-        { username: 'test@example.com', password: 'incorrect' }
       post '/users', params: valid_params
       post '/login', params: invalid_params
       expect(response.status).to eq 401
+    end
+
+    it 'returns 401 if invalid creds sent' do
+      post '/users', params: valid_params
+      post '/login', params: invalid_params
+      expect(JSON.parse(response.body)['error'])
+        .to eq 'Invalid username / password'
     end
   end
 end

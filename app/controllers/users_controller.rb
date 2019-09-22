@@ -17,7 +17,8 @@ class UsersController < ApplicationController
       auth_token = JsonWebToken.encode(username: user.username)
       render json: { auth_token: auth_token }, status: :ok
     else
-      render json: { error: 'Invalid username / password'}, status: :unauthorized
+      render json: { error: 'Invalid username / password' },
+             status: :unauthorized
     end
   end
 
