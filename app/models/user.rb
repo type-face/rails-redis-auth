@@ -5,23 +5,46 @@ class User
   include ActiveModel::Validations
   include ActiveModel::SecurePassword
   include Redis::Objects
+
   @@usernames = Redis::Set.new('users')
 
   has_secure_password
-  attr_accessor :username, :password_digest
-  validates :username, presence: true
-  validates :password, length: { minimum: 10 }
 
-  def initialize(username:, password:)
+  attr_accessor :username
+  attr_writer :password_digest
+
+  # TODO: validate username length
+  # TODO: validate username permitted characters
+  validates :username, presence: true
+  # TODO: validate password complexity
+  validates :password, length: { minimum: 10 }
+  validate :unique_username?
+
+  def initialize(username:, password: nil)
     @username = username.downcase
     self.password = password
   end
 
   def save
+    return unless valid?
+
+    # TODO: run as transaction
     @@usernames << @username.downcase
-    Redis::Value.new(User.password_redis_key(@username)).value =
+    Redis::Value.new(password_redis_key).value =
       password_digest
     true
+  end
+
+  def unique_username?
+    errors.add(:username, 'must be unique') if @@usernames.member? username
+  end
+
+  def password_digest
+    @password_digest ||= Redis::Value.new(password_redis_key).value
+  end
+
+  def password_redis_key
+    "password:#{@username}"
   end
 
   class << self
@@ -30,18 +53,9 @@ class User
     end
 
     def find(username)
-      return false unless usernames.member? username.downcase
+      return unless usernames.member? username.downcase
 
-      password = password_lookup(username)
-      new(username: username, password: password)
-    end
-
-    def password_lookup(username)
-      Redis::Value.new(password_redis_key(username)).value
-    end
-
-    def password_redis_key(username)
-      "password:#{username}"
+      new(username: username)
     end
   end
 end
