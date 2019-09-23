@@ -1,24 +1,25 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Rails Authentication with Redis
 
-Things you may want to cover:
+A Rails authentication API that uses just Redis for data storage. 
 
-* Ruby version
 
-* System dependencies
+### To run:
+1. `rails server`
+2. `redis-server`
 
-* Configuration
+### Running tests:
+`rspec`
 
-* Database creation
+### Endpoints
+*POST /users*
+params:
+* username
+* password
 
-* Database initialization
+*POST /login*
+params
+* username
+* password
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
