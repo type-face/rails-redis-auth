@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe User do
   let(:subject) do
-    described_class.new(username: 'TEST', password: 'password123!@#')
+    described_class.new(username: 'TEST', password: 'Password123!@#')
   end
 
   describe '#initialize' do
@@ -12,7 +12,7 @@ RSpec.describe User do
       expect(subject.username).to eq 'test'
     end
     it 'password' do
-      expect(subject.password).to eq 'password123!@#'
+      expect(subject.password).to eq 'Password123!@#'
     end
   end
 
@@ -21,9 +21,14 @@ RSpec.describe User do
     it 'uniqueness of username' do
       subject.save
       user2 =
-        User.new(username: subject.username.upcase, password: 'password123!@#')
+        User.new(username: subject.username.upcase, password: 'Password123!@#')
       user2.valid?
       expect(user2.errors[:username]).to include 'must be unique'
+    end
+    it 'length of username' do
+      subject.username = '123'
+      subject.valid?
+      expect(subject.errors[:username]).to include 'is too short (minimum is 4 characters)'
     end
     it 'presence of password' do
       subject = User.new(username: 'test', password: '')
@@ -52,7 +57,7 @@ RSpec.describe User do
   it 'prevents duplicate usernames (case insensitive) from being saved' do
     subject.save
     user2 =
-      User.new(username: subject.username.upcase, password: 'password123!@#')
+      User.new(username: subject.username.upcase, password: 'Password123!@#')
     user2.save
     expect(User.usernames.size).to eq 1
   end

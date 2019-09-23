@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Users', type: :request do
   let(:valid_params) do
-    { username: 'test@example.com', password: 'password123!@#' }
+    { username: 'test@example.com', password: 'Password123!@#' }
   end
 
   describe 'create' do

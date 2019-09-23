@@ -13,11 +13,12 @@ class User
   attr_accessor :username
   attr_writer :password_digest
 
-  # TODO: validate username length
-  # TODO: validate username permitted characters
   validates :username, presence: true
-  # TODO: validate password complexity
-  validates :password, length: { minimum: 10 }
+  validates :username, length: { minimum: 4, maximum: 30 }
+  validates :password, length: { minimum: 10, maximum: 50 }
+  validates :password, format: { with: /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/,
+                                 message: 'must have one lower case letter, one upper case letter,
+                                           one number, and one special character' }
   validate :unique_username?
 
   def initialize(username:, password: nil)
