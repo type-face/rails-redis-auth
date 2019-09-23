@@ -14,11 +14,13 @@ A Rails authentication API that uses just Redis for data storage.
 
 ### Endpoints
 *POST /users*
+
 params:
 * username
 * password
 
 *POST /login*
+
 params
 * username
 * password
