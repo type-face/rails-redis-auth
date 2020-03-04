@@ -8,7 +8,7 @@ ruby '2.5.3'
 gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'jwt'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 gem 'rails', '~> 5.2.1'
 gem 'redis', '~> 4.0'
 gem 'redis-objects'
